@@ -12,31 +12,30 @@ if(!repoOwner || ! repoName){
 
 var urlArr = [];
 var loginArr = [];
+var options = {
+    url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
+    headers: {
+        'User-Agent': 'request',
+        'Authorization': 'token ' + token.GITHUB_TOKEN
+    }
+};
+
 function getRepoContributors(repoOwner, repoName, cb) {
+    // Make avatars folder, if it doesn't exist already
     if(!fs.existsSync('./avatars')){
         fs.mkdirSync('./avatars')
     }
-    var options = {
-        url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
-        headers: {
-            'User-Agent': 'request',
-            'Authorization': 'token ' + token.GITHUB_TOKEN
-        }
-    };
-    
+    // make a request for JSON and parse data into the arrays
     request(options, function(err, res, body) {
         if (err){
             console.log(err);
         }
         var parsedArr = JSON.parse(body);
-        // console.log(parsedArr);
-        // console.log(parsedArr);
         parsedArr.forEach(function(element){
             urlArr.push(element.avatar_url);
             loginArr.push(element.login);
         });
-        // console.log(urlArr);
-        // console.log(loginArr);
+    // loop through each array and create custom filepath and pass url to the callback function
         for(var i = 0; i < urlArr.length; i++){
             var filePath = './avatars/' + loginArr[i] + '.jpg';
             // console.log(filePath);
@@ -47,6 +46,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
     
     
 function downloadImageByURL(url, filePath){
+    // get image urls and make image file from the picture
         request.get(url)
         .pipe(fs.createWriteStream(filePath))
 }

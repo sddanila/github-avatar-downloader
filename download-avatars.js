@@ -1,10 +1,14 @@
 var request = require('request');
 var token = require('./secrets.js');
 var fs = require('fs');
-
+var repoOwner = process.argv[2];
+var repoName = process.argv[3]
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
+if(!repoOwner || ! repoName){
+    console.log("You need to pass a valid repo owner and repo name!")
+}
 
 var urlArr = [];
 var loginArr = [];
@@ -35,7 +39,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
         // console.log(loginArr);
         for(var i = 0; i < urlArr.length; i++){
             var filePath = './avatars/' + loginArr[i] + '.jpg';
-            console.log(filePath);
+            // console.log(filePath);
             cb(urlArr[i], filePath);
         }
     });

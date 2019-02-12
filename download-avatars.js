@@ -11,6 +11,10 @@ if(!repoOwner || ! repoName){
     console.log("You need to pass a valid repo owner and repo name!")
 }
 
+if (!fs.existsSync('./env')) {
+    console.log("Your .env file is missing!")
+}
+
 var urlArr = [];
 var loginArr = [];
 var options = {
@@ -20,6 +24,7 @@ var options = {
         'Authorization': 'token ' + token
     }
 };
+
 
 function getRepoContributors(repoOwner, repoName, cb) {
     // Make avatars folder, if it doesn't exist already
